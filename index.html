@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Nerve by jstandish</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Nerve</h1>
+        <p>An asynchronous javascript micro framework for event broadcasts along routes and channels.</p>
+        <p class="view"><a href="https://github.com/jstandish/nerve">View the Project on GitHub <small>jstandish/nerve</small></a></p>
+        <ul>
+          <li><a href="https://github.com/jstandish/nerve/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/jstandish/nerve/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/jstandish/nerve">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="nerve" class="anchor" href="#nerve"><span class="octicon octicon-link"></span></a>nerve</h1>
+
+<p>An asynchronous javascript micro framework for event broadcasts along routes and channels. This approach is similar to backbone but uses routes and channels instead of a simple token. Typically channels and routes are found in message queues in enterprise environments. This pattern is useful when you are using an MVC pattern and need separate view models to be able to talk to each other, but need to keep them loosely coupled.</p>
+
+<p>The reason for creating this was to keep channels and routes logically different, rather than creating a complex token that has a single context.</p>
+
+<h2>
+<a name="listening-to-channels-and-routes" class="anchor" href="#listening-to-channels-and-routes"><span class="octicon octicon-link"></span></a>Listening to channels and routes</h2>
+
+<p>When specifying a listener you must specify a channel and callback. Optionally you have the ability to declare a route to give greater specificity to your event subscription. Finally there is an argument that allows you to change the scope of the subscription function. Changing the scope allows us to access properties that may exist outside of our callback scope.</p>
+
+<p>When you declare a channel and/or route to listen on, if the route does not exist, one is created for you. If the channel/route does exist, then it will simple append the listener to the collection.</p>
+
+<p>This pattern is similar to backbone but is smart enough to not rebind the same callback more than once if it's in the same scope. </p>
+
+<p><strong>Listening to any message on a channel</strong></p>
+
+<pre><code>nerve.on('order', function(context) {
+
+});
+</code></pre>
+
+<p><strong>Listening to a specific route on a channel</strong></p>
+
+<pre><code>nerve.on('order', 'created', function(context) {
+
+});
+</code></pre>
+
+<p><strong>Listening to a channel or route but using a different scope upon event consumption</strong></p>
+
+<pre><code>this.outsideScopeProperty = 'you can see me';
+
+var that = this;
+
+nerve.on('order', 'created', function(context) {
+  // The scope of the callback function has changed to whatever the subscription was told
+  return this.outsideScopeProperty === 'you can see me';
+}, that);
+</code></pre>
+
+<h2>
+<a name="removing-listeners-from-a-channel-or-route" class="anchor" href="#removing-listeners-from-a-channel-or-route"><span class="octicon octicon-link"></span></a>Removing listeners from a channel or route</h2>
+
+<p>Removing the listener will remove any callbacks that are bound to the channel or route. Notice in the examples you do not need to specify the callback function to remove it. Also you can not only remove a listener from a specific route but you can also remove all listeners from a channel.</p>
+
+<p><strong>Removing a listener for a channel</strong></p>
+
+<pre><code>nerve.off('order');
+</code></pre>
+
+<p><strong>Removing a listener from a specific channel's route</strong></p>
+
+<pre><code>nerve.off('order', 'created');
+</code></pre>
+
+<p><strong>Removing a listener from a specific channel's route that has a different scope</strong></p>
+
+<pre><code>var that = this;
+
+nerve.off('order', 'created', that);
+</code></pre>
+
+<h2>
+<a name="sending-message-along-a-channel-or-route" class="anchor" href="#sending-message-along-a-channel-or-route"><span class="octicon octicon-link"></span></a>Sending message along a channel or route</h2>
+
+<p>Sending a message along a channel or route is as simple as calling send. This will asynchronously call all callbacks for channel or a channel/route combination.</p>
+
+<p><strong>Sending a message to all listeners on a channel</strong></p>
+
+<pre><code>nerve.send('order', {SomeProperty: 'Hello'});
+</code></pre>
+
+<p><strong>Sending a message to listeners on a channel's route</strong></p>
+
+<pre><code>nerve.send('order', 'created', {SomeProperty: 'Hello'});
+</code></pre>
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/jstandish">jstandish</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
