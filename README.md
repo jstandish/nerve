@@ -1,4 +1,4 @@
 nerve
 =====
 
-A async javascript event broadcast implementation using routes and channels. This approach is similar to backbone but uses concepts from message queues typically found in an enterprise environment. 
+An async javascript event broadcast implementation using routes and channels. This approach is similar to backbone but uses routes and channels typically found in message queus in enterprise environments. 
