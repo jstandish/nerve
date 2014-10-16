@@ -89,7 +89,7 @@
 
                 if (!routes[channel][r]) return;
 
-                var i = 0, len = routes[channel][r];
+                var i = 0, len = routes[channel][r].length;
                 for (; i < len; i++) {
                     if (routes[channel][r][i].callee === caller)
                         delete routes[channel][r][i];
