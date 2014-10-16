@@ -121,8 +121,12 @@
 
                 (function (ch, rt, idx) {
                     var ref = setTimeout(function () {
-                        routes[ch][rt][idx].callback(ctx);
-                        clearTimeout(ref);
+                        try {
+                            routes[ch][rt][idx].callback(ctx);
+                            clearTimeout(ref);
+                        } catch (e) {
+                            return;
+                        }
                     });
                 })(channel, r, i);
             }
