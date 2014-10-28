@@ -6,5 +6,5 @@
     ".jshintrc",
     "**/*.txt"
   ],
-  homepage : 'https://github.com/jstandish/nerve'
+  "homepage" : "https://github.com/jstandish/nerve"
 }
