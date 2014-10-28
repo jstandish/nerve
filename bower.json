@@ -1,0 +1,10 @@
+{
+  "name": "nerve",
+  "version": "0.0.1",
+  "main": nerve.js",
+  "ignore": [
+    ".jshintrc",
+    "**/*.txt"
+  ],
+  homepage : 'https://github.com/jstandish/nerve'
+}
