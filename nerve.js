@@ -1,6 +1,7 @@
 (function () {
 
-    var routes = [];
+    // issue #1: routes should be object instead of array as per usage below.
+    var routes = {};
 
     function findSubscriber(callReference, array) {
         if (!array)
@@ -33,10 +34,13 @@
                     cb = arguments[1];
                     caller = arguments.callee;
                 }
-            } else if (arguments.length == 3 && Object.prototype.toString.call(arguments[1]) == "[object Function]") {
-                if (Object.prototype.toString.call(arguments[1]) == "[object Function]") {
-                    cb = arguments[1];
-                    caller = arguments[2] || arguments.callee;
+            } else if (arguments.length == 3 && Object.prototype.toString.call(arguments[2]) == "[object Function]") {
+                // issue #1: arguments[1] was being checked as the funciton, but [1] should be the route.
+                // issue #1: r was not being set and shoudl be the arguments[1] or route parameter.
+                if (Object.prototype.toString.call(arguments[2]) == "[object Function]") {
+                    r = arguments[1];
+                    cb = arguments[2];
+                    caller = arguments[3] || arguments.callee;
                 } else {
                     throw Error('Last parameter must be a callback function');
                 }
@@ -52,9 +56,7 @@
                 return;
             }
 
-
             if (!routes[channel]) {
-
                 //--- check on route
                 routes[channel] = [];
             }
@@ -87,7 +89,7 @@
 
                 if (!routes[channel][r]) return;
 
-                var i = 0, len = routes[channel][r];
+                var i = 0, len = routes[channel][r].length;
                 for (; i < len; i++) {
                     if (routes[channel][r][i].callee === caller)
                         delete routes[channel][r][i];
@@ -119,8 +121,12 @@
 
                 (function (ch, rt, idx) {
                     var ref = setTimeout(function () {
-                        routes[ch][rt][idx].callback(ctx);
-                        clearTimeout(ref);
+                        try {
+                            routes[ch][rt][idx].callback(ctx);
+                            clearTimeout(ref);
+                        } catch (e) {
+                            return;
+                        }
                     });
                 })(channel, r, i);
             }
